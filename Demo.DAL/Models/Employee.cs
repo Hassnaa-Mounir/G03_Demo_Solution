@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Demo.DAL.Models
 {
-    internal class Employee
+    public class Employee
     {
-        public int Id { get; set; }
+        public int EmployeeId { get; set; }
 
         [Required(ErrorMessage = "Name is Required")]
         [MaxLength(50)]
