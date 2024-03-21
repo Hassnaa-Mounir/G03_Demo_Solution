@@ -28,7 +28,7 @@ namespace Demo.PL
             services.AddControllersWithViews();
             services.AddDbContext<MVCAPP_DbContext>( options => 
             {
-                options.UseSqlServer("Server = . ; Database = MVC_APP ; Trusted_Connection = true ; Encrypted = false;");
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
 
             }); //allow dependency injection
         }
