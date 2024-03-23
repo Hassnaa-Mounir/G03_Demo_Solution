@@ -4,45 +4,45 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.PL.Controllers
 {
-    public class DepartmentController : Controller
+    public class EmployeeController : Controller
     {
-        private IDepartmentRepository _departmentRepository;
+        private IEmployeeRepository _employeeRepository;
 
-        public DepartmentController(IDepartmentRepository departRepository)
+        public EmployeeController(IEmployeeRepository employeeRepository)
         {
-            _departmentRepository = departRepository;
+            _employeeRepository = employeeRepository;
         }
         public IActionResult Index()
         {
-            var departments = _departmentRepository.GetAll();
-            return View(departments);
+            var employees = _employeeRepository.GetAll();
+            return View(employees);
         }
 
-        
+
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(Department department)
+        public IActionResult Create(Employee employee)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                _departmentRepository.Add(department);
+                _employeeRepository.Add(employee);
                 return RedirectToAction(nameof(Index));
             }
-            return View(department);    
+            return View(employee);
         }
 
-        public IActionResult Details(int? id , string ViewName ="Details")
+        public IActionResult Details(int? id, string ViewName = "Details")
         {
             if (id is null) return BadRequest();
 
-            var department = _departmentRepository.GetById(id.Value);
-            if (department is null) return NotFound();
+            var employee = _employeeRepository.GetById(id.Value);
+            if (employee is null) return NotFound();
 
-            return View(ViewName ,department);
+            return View(ViewName, employee);
         }
 
         [HttpGet]
@@ -50,39 +50,39 @@ namespace Demo.PL.Controllers
         {
             //if (id is null) return BadRequest();
 
-            //var department = _departmentRepository.GetById(id.Value);
-            //if (department is null) return NotFound();
+            //var employee = _employeeRepository.GetById(id.Value);
+            //if (employee is null) return NotFound();
 
             //return View(department);
-            return Details(id ,"Edit");
+            return Details(id, "Edit");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Department department ,[FromRoute] int id)
+        public IActionResult Edit(Employee employee, [FromRoute] int id)
         {
-            if (id != department.Id) return BadRequest();
-            if(ModelState.IsValid)
+            if (id != employee.EmployeeId) return BadRequest();
+            if (ModelState.IsValid)
             {
-                try 
+                try
                 {
-                    _departmentRepository.Update(department);
+                    _employeeRepository.Update(employee);
                     return RedirectToAction(nameof(Index));
-                } 
+                }
                 catch (System.Exception ex)
                 {
-                    ModelState.AddModelError(string.Empty ,ex.Message);
-                
+                    ModelState.AddModelError(string.Empty, ex.Message);
+
                 }
             }
 
-            return View(department);
+            return View(employee);
         }
 
-        public IActionResult Delete()
-        {
-            return View();
-        }
+        //public IActionResult Delete()
+        //{
+        //    return View();
+        //}
 
         #region  Delete Operation
         //  [HttpGet]
