@@ -79,9 +79,36 @@ namespace Demo.PL.Controllers
             return View(department);
         }
 
-        public IActionResult Delete()
+        //public IActionResult Delete()
+        //{
+        //    return View();
+        //}
+
+        #region  Delete Operation
+        [HttpGet]
+        //[ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
         {
-            return View();
+            return Details(id, "Delete");
+        }
+
+         [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(Department department )
+        {
+            try
+            {
+                _departmentRepository.Delete(department);
+                return RedirectToAction(nameof(Index));
+
+            }
+
+            catch (System.Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(ex.Message);
+                throw;
+            }
         }
 
         #region  Delete Operation
