@@ -24,6 +24,16 @@ namespace Demo.PL
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddDbContext<MVCAPP_DbContext>( options => 
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+
+            }); //allow dependency injection
+
+            services.AddScoped<IDepartmentRepository , DepartmentRepository>();
+           
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
