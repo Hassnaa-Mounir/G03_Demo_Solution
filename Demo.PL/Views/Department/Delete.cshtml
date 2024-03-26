@@ -3,6 +3,8 @@
     ViewData["Title"] = "Delete";
 }
 
+<div asp-validation-summary="All"></div>
+
 <h1>Are You ensure to delete Department @Model.Name ?</h1>
 <br />
 
@@ -25,7 +27,8 @@
 
     </div>
 
-    <button type="submit"  class="btn btn-danger">Delete</button>  |
+    <button type="submit" value="Delete" class="btn btn-danger" >Delete</button>
+    |
 
     <a asp-action="Index" class="btn btn-secondary">Cancel</a>
 
