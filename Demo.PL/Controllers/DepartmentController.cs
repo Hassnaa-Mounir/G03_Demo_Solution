@@ -62,6 +62,7 @@ namespace Demo.PL.Controllers
         public IActionResult Edit(Department department ,[FromRoute] int id)
         {
             if (id != department.Id) return BadRequest();
+
             if(ModelState.IsValid)
             {
                 try 
@@ -79,38 +80,39 @@ namespace Demo.PL.Controllers
             return View(department);
         }
 
-        public IActionResult Delete()
-        {
-            return View();
-        }
+        //public IActionResult Delete()
+        //{
+        //    return View();
+        //}
 
         #region  Delete Operation
-        //  [HttpGet]
-        // [ValidateAntiForgeryToken]
-        // public IActionResult Delete([FromRoute] int? id)
-        // {
-        //     return Details(id , "Delete");
-        // }
-        //
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
-        // public IActionResult Delete(Department department )
-        // {
-        //     try
-        //     {
-        //      _departmentRepository.Delete(department);
-        //         return RedirectToAction(nameof(Index));
-        //     
-        //     }
-        //
-        //     catch (System.Exception ex)
-        //     {
-        //         ModelState.AddModelError (string.Empty ,ex.Message);
-        //       return View(ex.Message);
-        //         throw;
-        //     }
-        // }
-        // 
+        [HttpGet]
+        //[ValidateAntiForgeryToken]
+        public IActionResult Delete([FromRoute] int? id)
+        {
+            return Details(id, "Delete");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(Department department ,[FromRoute]int? id)
+        {
+            if (id != department.Id) return BadRequest();
+            try
+            {
+                _departmentRepository.Delete(department);
+                return RedirectToAction(nameof(Index));
+
+            }
+
+            catch (System.Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(department);
+                throw;
+            }
+        }
+
         #endregion
     }
 }
