@@ -24,5 +24,11 @@ namespace Demo.BLL.Repository
         {
            return _dbContext.Set<Employee>().Where(E=>E.Address == address);
         }
+
+        public IQueryable SearchByName(string Name)
+        {
+            return _dbContext.Set<Employee>().Where(E => E.Name.Contains(Name));
+        }
+
     }
 }

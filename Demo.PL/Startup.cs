@@ -32,7 +32,7 @@ namespace Demo.PL
             {
                 options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
                 //Default Scopped
-            }  /*,ServiceLifetime.Singleton*/); //allow dependency injection
+            }  /*, ServiceLifetime.Scoped*//*,ServiceLifetime.Singleton*//*,ServiceLifetime.Transient*/); //allow dependency injection
 
             services.AddScoped<IDepartmentRepository , DepartmentRepository>();
 
