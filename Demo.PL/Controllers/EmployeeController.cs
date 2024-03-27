@@ -20,8 +20,20 @@ namespace Demo.PL.Controllers
         public IActionResult Index() 
         {
             var employees= _employeeRepository.GetAll();
+
             return View(employees);
         }
+
+        public IActionResult Search(string name) 
+        {
+            var empSResult = _employeeRepository.SearchByName(name);
+
+            if (empSResult is not null) { return View(empSResult); }
+
+            return RedirectToAction(nameof(Index));
+            
+        }
+
         [HttpGet]
         public IActionResult Create() 
         {
