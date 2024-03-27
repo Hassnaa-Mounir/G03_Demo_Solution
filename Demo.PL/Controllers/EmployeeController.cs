@@ -8,10 +8,12 @@ namespace Demo.PL.Controllers
     public class EmployeeController : Controller
     {
         private IEmployeeRepository _employeeRepository;
+        private readonly IDepartmentRepository departmentRepository;
 
-        public EmployeeController(IEmployeeRepository employeeRepository)
+        public EmployeeController(IEmployeeRepository employeeRepository ,IDepartmentRepository departmentRepository)
         {
             _employeeRepository = employeeRepository;
+            this.departmentRepository = departmentRepository;
         }
 
         public IActionResult Index() 
@@ -22,6 +24,7 @@ namespace Demo.PL.Controllers
         [HttpGet]
         public IActionResult Create() 
         {  
+            ViewBag.Departments=departmentRepository.GetAll();
             return View(); 
         }
 
