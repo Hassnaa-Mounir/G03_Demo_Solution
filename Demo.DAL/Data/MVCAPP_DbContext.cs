@@ -23,5 +23,17 @@ namespace Demo.DAL.Data
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //=> optionsBuilder.UseSqlServer("Server = . ; Database = MVC_APP ; Trusted_Connection = true ; Encrypted = false;"); // EF Core
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+           
+
+            modelBuilder.Entity<Employee>().HasOne(e=>e.department).WithMany(d=>d.Employees).HasForeignKey(d=>d.DeptId)/*.OnDelete(DeleteBehavior.Cascade)*/;
+
+
+
+
+        }
+
+
     }
 }
