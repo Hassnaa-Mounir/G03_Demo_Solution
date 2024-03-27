@@ -2,16 +2,19 @@
 using Demo.BLL.Repository;
 using Demo.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace Demo.PL.Controllers
 {
     public class EmployeeController : Controller
     {
         private IEmployeeRepository _employeeRepository;
+        private readonly IDepartmentRepository departmentRepository;
 
-        public EmployeeController(IEmployeeRepository employeeRepository)
+        public EmployeeController(IEmployeeRepository employeeRepository ,IDepartmentRepository departmentRepository)
         {
             _employeeRepository = employeeRepository;
+            this.departmentRepository = departmentRepository;
         }
 
         public IActionResult Index() 
@@ -21,7 +24,18 @@ namespace Demo.PL.Controllers
         }
         [HttpGet]
         public IActionResult Create() 
-        {  
+        {
+            var departs = departmentRepository.GetAll();
+
+            if (departs == null)
+            {
+                departs = new List<Department>(); // Create an empty list
+            }
+
+            else { ViewBag.Departs = departs; }
+            
+            
+            
             return View(); 
         }
 
