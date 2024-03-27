@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -35,7 +36,16 @@ namespace Demo.DAL.Models
         public int Gender { get; set; }
 
         [Phone]
-        public string PhoneNumber { get; set; } 
+        public string PhoneNumber { get; set; }
+
+
+        //forignKey
+        [ForeignKey(nameof(department))]
+        public int? DeptId { get; set; }
+
+        //Navigational property [one]
+        [InverseProperty(nameof(Department.Employees))]
+        public Department department { get; set; } = null!;
 
     }
 }
