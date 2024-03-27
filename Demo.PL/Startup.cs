@@ -30,7 +30,7 @@ namespace Demo.PL
             services.AddControllersWithViews();
             services.AddDbContext<MVCAPP_DbContext>( options => 
             {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
                 //Default Scopped
             }  /*,ServiceLifetime.Singleton*/); //allow dependency injection
 

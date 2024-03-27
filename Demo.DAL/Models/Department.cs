@@ -23,7 +23,7 @@ namespace Demo.DAL.Models
 
         //Navigational Property
         [InverseProperty(nameof(Employee.department))]
-        public ICollection<Employee> Employees { get; set; } = new HashSet<Employee>();
+        public virtual ICollection<Employee> Employees { get; set; } = new HashSet<Employee>();
 
     }
 }
