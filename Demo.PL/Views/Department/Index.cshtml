@@ -1,6 +1,29 @@
 ﻿@model IEnumerable<Department>
 @{
     ViewData["Title"] = "AllDepartments";
+    // string VData = (string)ViewData["Msg"];
+
+    //   VData = ViewBag.Msg;
+}
+
+
+ 
+
+
+@* @if (@ViewData["Msg"] is not null)
+{
+     <div class="alert alert-success"> @ViewData["Msg"]</div>
+
+
+} *@
+
+@* <div class="alert alert-success"> @ViewData["Message"]</div>
+<br />
+<div class="alert alert-primary"> @ViewBag.Message</div>
+ *@
+@if (TempData["Message"] is not null)
+{
+   <div class="alert alert-success"> @TempData["Message"]</div>    
 }
 
 <a asp-action="Create" class="btn btn-success">Create New Department </a>
