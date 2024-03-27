@@ -2,6 +2,7 @@
 using Demo.BLL.Repository;
 using Demo.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace Demo.PL.Controllers
 {
@@ -23,8 +24,18 @@ namespace Demo.PL.Controllers
         }
         [HttpGet]
         public IActionResult Create() 
-        {  
-            ViewBag.Departments=departmentRepository.GetAll();
+        {
+            var departs = departmentRepository.GetAll();
+
+            if (departs == null)
+            {
+                departs = new List<Department>(); // Create an empty list
+            }
+
+            else { ViewBag.Departs = departs; }
+            
+            
+            
             return View(); 
         }
 

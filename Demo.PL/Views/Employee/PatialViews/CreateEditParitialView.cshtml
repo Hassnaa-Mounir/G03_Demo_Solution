@@ -1,8 +1,6 @@
-﻿
-@model Employee
-
+﻿@model Employee 
 @{
-    var departments = new SelectList(@ViewBag.Departments, "Id", "Name");
+    var departments = new SelectList(@ViewBag.Departs, "Id", "Name");
 }
 
 <div class="form-group">
@@ -36,8 +34,8 @@
 
 <div class="form-group">
     <label class="col-form-label" asp-for="department"></label>
-   <select class="form-control" asp-items="@departments" asp-for="DeptId">
-       <option value="@null"> --- SelectDepartment --- </option>
+   <select class="form-control" asp-items="@departments" asp-for="DeptId"> 
+       <option value="@null"> --- SelectDepartment --- </option>   
 
    </select>
     
