@@ -15,6 +15,16 @@ namespace Demo.PL.Controllers
         public IActionResult Index()
         {
             var departments = _departmentRepository.GetAll();
+
+
+            ////1.ViewData
+
+            //ViewData["Message"] = "Hello from viewData";
+
+            ////2.ViewBag
+
+            //ViewBag.Message = "Hello from viewBag";
+
             return View(departments);
         }
 
@@ -29,7 +39,10 @@ namespace Demo.PL.Controllers
         {
             if(ModelState.IsValid)
             {
-                _departmentRepository.Add(department);
+               int result= _departmentRepository.Add(department); // # of rows effected
+
+
+                if (result > 0) { TempData["Message"] = "Department Will Created"; }
                 return RedirectToAction(nameof(Index));
             }
             return View(department);    
