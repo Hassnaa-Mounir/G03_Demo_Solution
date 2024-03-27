@@ -25,14 +25,14 @@ namespace Demo.PL.Controllers
         [HttpGet]
         public IActionResult Create() 
         {
-            var departs = departmentRepository.GetAll();
+        //    var departs = departmentRepository.GetAll();
 
-            if (departs == null)
-            {
-                departs = new List<Department>(); // Create an empty list
-            }
+        //    if (departs == null)
+        //    {
+        //        departs = new List<Department>(); // Create an empty list
+        //    }
 
-            else { ViewBag.Departs = departs; }
+        //    else { ViewBag.Departs = departs; }
             
             
             
