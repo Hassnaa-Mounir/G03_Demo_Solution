@@ -30,13 +30,18 @@ namespace Demo.PL
             services.AddControllersWithViews();
             services.AddDbContext<MVCAPP_DbContext>( options => 
             {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-
-            }); //allow dependency injection
+                options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                //Default Scopped
+            }  /*,ServiceLifetime.Singleton*/); //allow dependency injection
 
             services.AddScoped<IDepartmentRepository , DepartmentRepository>();
 
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
+            //services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
+
+            //services.AddTransient<IEmployeeRepository, EmployeeRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

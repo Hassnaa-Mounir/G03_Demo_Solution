@@ -45,7 +45,7 @@ namespace Demo.DAL.Models
 
         //Navigational property [one]
         [InverseProperty(nameof(Department.Employees))]
-        public Department department { get; set; } = null!;
+        public virtual Department department { get; set; } = null!;
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿@model Employee 
+@inject IDepartmentRepository departmentRepo
 @{
-    var departments = new SelectList(@ViewBag.Departs, "Id", "Name");
+    var departments = new SelectList(/* @ViewBag.Departs */departmentRepo.GetAll(), "Id", "Name");
 }
 
 <div class="form-group">
