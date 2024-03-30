@@ -23,7 +23,7 @@
  *@
 @if (TempData["Message"] is not null)
 {
-   <div class="alert alert-success"> @TempData["Message"]</div>    
+   <div id="MessageDiv" class="alert alert-success"> @TempData["Message"]</div>    
 }
 
 <a asp-action="Create" class="btn btn-success">Create New Department </a>
