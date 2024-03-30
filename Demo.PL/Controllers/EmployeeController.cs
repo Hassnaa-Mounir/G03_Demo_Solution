@@ -31,14 +31,15 @@ namespace Demo.PL.Controllers
         public IActionResult Index(string ValueName) 
         {
             var employees = Enumerable.Empty<Employee>();
+            var employeeRepo = unitOfWork.Repository<Employee>() as EmployeeRepository;
 
             if (string.IsNullOrEmpty(ValueName)) 
             {
-                employees = unitOfWork.EmployeeRepository.GetAll();
+                employees = employeeRepo.GetAll();
 
             }
 
-            else { employees = (IEnumerable<Employee>)unitOfWork.EmployeeRepository.SearchByName(ValueName); }
+            else { employees = (IEnumerable<Employee>)employeeRepo.SearchByName(ValueName); }
 
             var MappedEmp = mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
 
@@ -98,7 +99,7 @@ namespace Demo.PL.Controllers
                 //Auto Mapping
 
                 var Mapperemp = mapper.Map<EmployeeViewModel, Employee>(VMemployee);
-                unitOfWork.EmployeeRepository.Add(Mapperemp);
+                unitOfWork.Repository<Employee>().Add(Mapperemp);
 
 
                 ////2.Update emppployee
@@ -124,7 +125,7 @@ namespace Demo.PL.Controllers
         {
             if (id is null) return BadRequest();
 
-            var emp= unitOfWork.EmployeeRepository.GetById(id.Value);
+            var emp= unitOfWork.Repository<Employee>().GetById(id.Value);
             var MappedEmp = mapper.Map<Employee, EmployeeViewModel>(emp);
 
             if (emp is null) return NotFound();
@@ -150,7 +151,7 @@ namespace Demo.PL.Controllers
                 try
                 {
                     var MappedEmp = mapper.Map<EmployeeViewModel, Employee>(VMemployee);
-                    unitOfWork.EmployeeRepository.Update(MappedEmp);
+                    unitOfWork.Repository<Employee>().Update(MappedEmp);
                     unitOfWork.Complete();
                     return RedirectToAction(nameof(Index));
                 }
@@ -183,7 +184,7 @@ namespace Demo.PL.Controllers
                 try
                 {
                     var MappedEmployee = mapper.Map<EmployeeViewModel, Employee>(VMemployee);
-                    unitOfWork.EmployeeRepository.Delete(MappedEmployee);
+                    unitOfWork.Repository<Employee>().Delete(MappedEmployee);
                     unitOfWork.Complete(); //Save changes in database
                     return RedirectToAction(nameof(Index));
 

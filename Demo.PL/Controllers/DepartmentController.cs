@@ -17,7 +17,7 @@ namespace Demo.PL.Controllers
         }
         public IActionResult Index()
         {
-            var departments = unitOfWork.DepartmentRepository.GetAll();
+            var departments = unitOfWork.Repository<Department>().GetAll();
 
 
             ////1.ViewData
@@ -42,7 +42,7 @@ namespace Demo.PL.Controllers
         {
             if(ModelState.IsValid)
             {
-                unitOfWork.DepartmentRepository.Add(department); // # of rows effected
+                unitOfWork.Repository<Department>().Add(department); // # of rows effected
                var result= unitOfWork.Complete();
 
                 if (result > 0) { TempData["Message"] = "Department Will Created"; }
@@ -55,7 +55,7 @@ namespace Demo.PL.Controllers
         {
             if (id is null) return BadRequest();
 
-            var department = unitOfWork.DepartmentRepository.GetById(id.Value);
+            var department = unitOfWork.Repository<Department>().GetById(id.Value);
             if (department is null) return NotFound();
 
             return View(ViewName ,department);
@@ -83,7 +83,7 @@ namespace Demo.PL.Controllers
             {
                 try 
                 {
-                    unitOfWork.DepartmentRepository.Update(department);
+                    unitOfWork.Repository<Department>().Update(department);
                     unitOfWork.Complete();
                     return RedirectToAction(nameof(Index));
                 } 
@@ -117,7 +117,7 @@ namespace Demo.PL.Controllers
             if (id != department.Id) return BadRequest();
             try
             {
-                unitOfWork.DepartmentRepository.Delete(department);
+                unitOfWork.Repository<Department>().Delete(department);
                 unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
 
