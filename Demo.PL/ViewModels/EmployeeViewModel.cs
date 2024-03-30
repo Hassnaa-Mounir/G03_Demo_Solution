@@ -1,41 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using Demo.DAL.Models;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Enum;
+using System.ComponentModel.DataAnnotations;
 
-namespace Demo.DAL.Models
+namespace Demo.PL.ViewModels
 {
-    
-    public class Employee
+    public class EmployeeViewModel
     {
-       
-        public int Id{ get; set; }
+
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "Name is Required")]
-        [MaxLength(50,ErrorMessage ="Maximum Length of name 50")]
+        [MaxLength(50, ErrorMessage = "Maximum Length of name 50")]
         [MinLength(5, ErrorMessage = "Minimum Length of name 50")]
-        public string Name { get; set; }
+        public string EmpName { get; set; }
 
-        //[RegularExpression("^[0-9]{1-3}-[a-zA-Z]{4-10}-[a-zA-Z]{3-10}-[a-zA-Z]{4-10}",ErrorMessage ="Address Must That As 123-Street-City-Country")]
+        [RegularExpression("^[0-9]{1-3}-[a-zA-Z]{4-10}-[a-zA-Z]{3-10}-[a-zA-Z]{4-10}$",ErrorMessage ="Address Must That As 123-Street-City-Country")]
         public string Address { get; set; }
 
-       
+        [DataType(DataType.Currency)]
         public decimal Salary { get; set; }
 
         public bool IsActive { get; set; }
 
-        
+        [EmailAddress]
         public string Email { get; set; }
 
 
         public int Gender { get; set; }
 
-       
+        [Phone]
         public string PhoneNumber { get; set; }
 
 
@@ -46,6 +39,5 @@ namespace Demo.DAL.Models
         //Navigational property [one]
         [InverseProperty(nameof(Department.Employees))]
         public virtual Department department { get; set; } = null!;
-
     }
 }

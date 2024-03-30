@@ -1,6 +1,9 @@
 using Demo.BLL.Interfaces;
 using Demo.BLL.Repository;
 using Demo.DAL.Data;
+using Demo.DAL.Models;
+using Demo.PL.MappingProfile;
+using Demo.PL.ViewModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,12 +35,12 @@ namespace Demo.PL
             {
                 options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
                 //Default Scopped
-            }  /*, ServiceLifetime.Scoped*//*,ServiceLifetime.Singleton*//*,ServiceLifetime.Transient*/); //allow dependency injection
+            }/*, ServiceLifetime.Scoped*//*,ServiceLifetime.Singleton*//*,ServiceLifetime.Transient*/); //allow dependency injection
 
             services.AddScoped<IDepartmentRepository , DepartmentRepository>();
 
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-
+            services.AddAutoMapper(M=>M.AddProfile(new EmployeeProfile()));
             //services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
 
             //services.AddTransient<IEmployeeRepository, EmployeeRepository>();

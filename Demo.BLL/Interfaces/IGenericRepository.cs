@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Demo.BLL.Interfaces
 {
-    public interface IGenericRepository <T>
+    public interface IGenericRepository <T>  where T : class 
     {
         IEnumerable<T> GetAll();
 
@@ -18,5 +18,7 @@ namespace Demo.BLL.Interfaces
         int Update(T item);
 
         int Delete(T item);
+
+       // void Dispose();
     }
 }

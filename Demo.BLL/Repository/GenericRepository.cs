@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Demo.BLL.Repository
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : class  
     {
-        private readonly MVCAPP_DbContext dbContext;
+        private protected readonly MVCAPP_DbContext dbContext;
 
         public GenericRepository(MVCAPP_DbContext dbContext)
         {
@@ -30,6 +30,8 @@ namespace Demo.BLL.Repository
             dbContext.Remove(item);
             return dbContext.SaveChanges();
         }
+
+      
 
         public IEnumerable<T> GetAll()
         {
