@@ -8,9 +8,11 @@ namespace Demo.BLL.Interfaces
 {
     public interface IUnitOfWork
     {
-        public IEmployeeRepository EmployeeRepository { get; set; }
+        //public IEmployeeRepository EmployeeRepository { get; set; }
 
-        public IDepartmentRepository DepartmentRepository { get; set; }
+        //public IDepartmentRepository DepartmentRepository { get; set; }
+
+        IGenericRepository<T> Repository<T>() where T :class;
 
         int Complete();
 
