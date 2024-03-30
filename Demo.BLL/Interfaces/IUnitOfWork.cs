@@ -13,5 +13,7 @@ namespace Demo.BLL.Interfaces
         public IDepartmentRepository DepartmentRepository { get; set; }
 
         int Complete();
+
+       // void Dispose();
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Demo.BLL.Repository
 {
-    public class UnitOfWork : IUnitOfWork 
+    public class UnitOfWork : IUnitOfWork ,IDisposable
     {
         private readonly MVCAPP_DbContext dbContext;
 
@@ -25,5 +25,8 @@ namespace Demo.BLL.Repository
         {
           return  dbContext.SaveChanges();
         }
+
+        public void Dispose()
+        =>dbContext.Dispose();
     }
 }
