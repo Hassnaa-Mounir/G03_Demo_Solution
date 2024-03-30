@@ -19,17 +19,13 @@ namespace Demo.BLL.Repository
             this.dbContext = dbContext;
         }
 
-        public int Add(T item)
-        {
-            dbContext.Add(item);
-            return dbContext.SaveChanges();
-        }
+        public void Add(T item)
+        => dbContext.Add(item);
+ 
 
-        public int Delete(T item)
-        {
-            dbContext.Remove(item);
-            return dbContext.SaveChanges();
-        }
+        public void Delete(T item)
+       =>   dbContext.Remove(item);
+           
 
       
 
@@ -47,10 +43,10 @@ namespace Demo.BLL.Repository
         => dbContext.Set<T>().Find(id);
        
 
-        public int Update(T item)
-        {
-            dbContext.Update(item);
-            return dbContext.SaveChanges();
-        }
+        public void Update(T item)
+       =>   dbContext.Update(item);
+
+
+          
     }
 }
