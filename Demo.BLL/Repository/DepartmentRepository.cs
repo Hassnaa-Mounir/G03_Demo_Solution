@@ -13,7 +13,7 @@ namespace Demo.BLL.Repository
     public class DepartmentRepository : GenericRepository<Department> , IDepartmentRepository
     {
 
-        private MVCAPP_DbContext _dbContext;
+      //  private MVCAPP_DbContext _dbContext;
 
         public DepartmentRepository(MVCAPP_DbContext dbContext) :base(dbContext)
         {

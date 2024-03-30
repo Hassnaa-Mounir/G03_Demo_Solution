@@ -1,8 +1,14 @@
-﻿using Demo.BLL.Interfaces;
+﻿using AutoMapper;
+using Demo.BLL.Interfaces;
 using Demo.BLL.Repository;
 using Demo.DAL.Models;
+using Demo.PL.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Emit;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.NetworkInformation;
+using System.Xml.Linq;
 
 namespace Demo.PL.Controllers
 {
@@ -10,29 +16,41 @@ namespace Demo.PL.Controllers
     {
         private IEmployeeRepository _employeeRepository;
         private readonly IDepartmentRepository departmentRepository;
+        private readonly IMapper mapper;
 
-        public EmployeeController(IEmployeeRepository employeeRepository ,IDepartmentRepository departmentRepository)
+        public EmployeeController(IEmployeeRepository employeeRepository ,IDepartmentRepository departmentRepository ,IMapper mapper)
         {
             _employeeRepository = employeeRepository;
             this.departmentRepository = departmentRepository;
+            this.mapper = mapper;
         }
 
-        public IActionResult Index() 
+        public IActionResult Index(string ValueName) 
         {
-            var employees= _employeeRepository.GetAll();
+            var employees = Enumerable.Empty<Employee>();
 
-            return View(employees);
+            if (string.IsNullOrEmpty(ValueName)) 
+            {
+                employees = _employeeRepository.GetAll();
+
+            }
+
+            else { employees = (IEnumerable<Employee>)_employeeRepository.SearchByName(ValueName); }
+
+            var MappedEmp = mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
+
+            return View(MappedEmp);
         }
 
-        public IActionResult Search(string name) 
-        {
-            var empSResult = _employeeRepository.SearchByName(name);
+        //public IActionResult Search(string name)
+        //{
+        //    var empSResult = _employeeRepository.SearchByName(name);
 
-            if (empSResult is not null) { return View(empSResult); }
+        //    if (empSResult is not null) { return View(empSResult); }
 
-            return RedirectToAction(nameof(Index));
-            
-        }
+        //    return RedirectToAction(nameof(Index));
+
+        //}
 
         [HttpGet]
         public IActionResult Create() 
@@ -52,16 +70,37 @@ namespace Demo.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Employee employee) 
+        public IActionResult Create(EmployeeViewModel VMemployee) 
         {
-            if(ModelState.IsValid)
+            #region Mnual Mapping
+            //Manual Mapping
+            //var Mapper = new Employee()
+            //{
+            //    Name = VMemployee.Name,
+            //   Address = VMemployee.Address,
+            //   Salary = VMemployee.Salary,
+            //   IsActive = VMemployee.IsActive,
+            //    Email = VMemployee.Email,
+            //    Gender = VMemployee.Gender,
+            //    PhoneNumber = VMemployee.PhoneNumber,
+            //    DeptId = VMemployee.DeptId,
+            //    department =VMemployee.department
+            //}; 
+            // consider Also Manual Mapping
+            // Employee Mapper = (Employee) VMemployee; //Casting Failed Not Have Explicit overloading to can make cast  but canot make this in model 
+            #endregion
+
+            if (ModelState.IsValid)
             {
-                var emp = _employeeRepository.Add(employee);
+                //Auto Mapping
+
+                var Mapperemp = mapper.Map<EmployeeViewModel, Employee>(VMemployee);
+                var emp = _employeeRepository.Add(Mapperemp);
                 return RedirectToAction(nameof(Index));
             }
             else
             {
-                return View(employee);
+                return View(VMemployee);
             }
         }
 
@@ -72,10 +111,11 @@ namespace Demo.PL.Controllers
             if (id is null) return BadRequest();
 
             var emp= _employeeRepository.GetById(id.Value);
+            var MappedEmp = mapper.Map<Employee, EmployeeViewModel>(emp);
 
             if (emp is null) return NotFound();
 
-            return View(ViewName , emp);
+            return View(ViewName, MappedEmp);
         }
 
         [HttpGet]
@@ -87,15 +127,16 @@ namespace Demo.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Employee employee , [FromRoute] int id)
+        public IActionResult Edit(EmployeeViewModel VMemployee , [FromRoute] int id)
         {
-            if(id != employee.Id) return BadRequest();
+            if(id != VMemployee.Id) return BadRequest();
 
             if (ModelState.IsValid) 
             {
                 try
                 {
-                    _employeeRepository.Update(employee);
+                    var MappedEmp = mapper.Map<EmployeeViewModel, Employee>(VMemployee);
+                    _employeeRepository.Update(MappedEmp);
                     return RedirectToAction(nameof(Index));
                 }
                 catch (System.Exception ex)
@@ -104,7 +145,8 @@ namespace Demo.PL.Controllers
                 }
                 
             }
-            return View(employee);
+
+            return View(VMemployee);
 
         }
 
@@ -117,15 +159,16 @@ namespace Demo.PL.Controllers
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public IActionResult Delete(Employee employee , [FromRoute] int? id) 
+        public IActionResult Delete(EmployeeViewModel VMemployee , [FromRoute] int? id) 
         {
-            if (employee.Id!= id) return BadRequest();
+            if (VMemployee.Id!= id) return BadRequest();
 
             if (ModelState.IsValid) 
             {
                 try
                 {
-                    _employeeRepository.Delete(employee);
+                    var MappedEmployee = mapper.Map<EmployeeViewModel, Employee>(VMemployee);
+                    _employeeRepository.Delete(MappedEmployee);
                     return RedirectToAction(nameof(Index));
 
                 }
@@ -138,7 +181,7 @@ namespace Demo.PL.Controllers
                 }
 
             }
-            return View(employee);
+            return View(VMemployee);
         }
     }
 

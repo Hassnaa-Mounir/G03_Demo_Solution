@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Demo.BLL.Interfaces
 {
-    public interface IEmployeeRepository : IGenericRepository<Employee>
+    public interface IEmployeeRepository : IGenericRepository<Employee> 
     { 
      
-        IQueryable GetByAddress(string address);
-        IQueryable SearchByName(string Name;
+       public IQueryable GetByAddress(string address);
+       public IQueryable SearchByName(string Name);
 
 
 

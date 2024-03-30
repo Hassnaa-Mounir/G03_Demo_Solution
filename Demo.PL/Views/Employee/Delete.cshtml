@@ -1,11 +1,11 @@
-﻿@model Employee
+﻿@model EmployeeViewModel
 @{
     ViewData["Title"] = "Delete";
 }
 
 <div asp-validation-summary="All"></div>
 
-<h1>Are You ensure to delete Employee @Model.Name ?</h1>
+<h1>Are You ensure to delete Employee @Model.EmpName ?</h1>
 <br />
 
 <form asp-action="Delete">
