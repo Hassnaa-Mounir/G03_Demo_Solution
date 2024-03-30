@@ -14,14 +14,17 @@ namespace Demo.PL.Controllers
 {
     public class EmployeeController : Controller
     {
-        private IEmployeeRepository _employeeRepository;
-        private readonly IDepartmentRepository departmentRepository;
+        //private IEmployeeRepository _employeeRepository;
+        //private readonly IDepartmentRepository departmentRepository;
+        private readonly IUnitOfWork unitOfWork; 
         private readonly IMapper mapper;
 
-        public EmployeeController(IEmployeeRepository employeeRepository ,IDepartmentRepository departmentRepository ,IMapper mapper)
+        public EmployeeController(/*IEmployeeRepository employeeRepository ,IDepartmentRepository departmentRepository */
+                              IUnitOfWork unitOfWork,IMapper mapper) //Ask CLR that Create object from class implement interface IUnitOfWork
         {
-            _employeeRepository = employeeRepository;
-            this.departmentRepository = departmentRepository;
+            this.unitOfWork = unitOfWork;
+            //_employeeRepository = employeeRepository;
+            //this.departmentRepository = departmentRepository;
             this.mapper = mapper;
         }
 
@@ -31,11 +34,11 @@ namespace Demo.PL.Controllers
 
             if (string.IsNullOrEmpty(ValueName)) 
             {
-                employees = _employeeRepository.GetAll();
+                employees = unitOfWork.EmployeeRepository.GetAll();
 
             }
 
-            else { employees = (IEnumerable<Employee>)_employeeRepository.SearchByName(ValueName); }
+            else { employees = (IEnumerable<Employee>)unitOfWork.EmployeeRepository.SearchByName(ValueName); }
 
             var MappedEmp = mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
 
@@ -95,7 +98,18 @@ namespace Demo.PL.Controllers
                 //Auto Mapping
 
                 var Mapperemp = mapper.Map<EmployeeViewModel, Employee>(VMemployee);
-                var emp = _employeeRepository.Add(Mapperemp);
+                unitOfWork.EmployeeRepository.Add(Mapperemp);
+
+
+                ////2.Update emppployee
+                //  emp = unitOfWork.EmployeeRepository.Update(Mapperemp);
+                //
+
+                ///3.Delte
+                /// emp = unitOfWork.EmployeeRepository.Delete(Mapperemp);
+
+                unitOfWork.Complete();
+
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -110,7 +124,7 @@ namespace Demo.PL.Controllers
         {
             if (id is null) return BadRequest();
 
-            var emp= _employeeRepository.GetById(id.Value);
+            var emp= unitOfWork.EmployeeRepository.GetById(id.Value);
             var MappedEmp = mapper.Map<Employee, EmployeeViewModel>(emp);
 
             if (emp is null) return NotFound();
@@ -136,7 +150,8 @@ namespace Demo.PL.Controllers
                 try
                 {
                     var MappedEmp = mapper.Map<EmployeeViewModel, Employee>(VMemployee);
-                    _employeeRepository.Update(MappedEmp);
+                    unitOfWork.EmployeeRepository.Update(MappedEmp);
+                    unitOfWork.Complete();
                     return RedirectToAction(nameof(Index));
                 }
                 catch (System.Exception ex)
@@ -168,7 +183,8 @@ namespace Demo.PL.Controllers
                 try
                 {
                     var MappedEmployee = mapper.Map<EmployeeViewModel, Employee>(VMemployee);
-                    _employeeRepository.Delete(MappedEmployee);
+                    unitOfWork.EmployeeRepository.Delete(MappedEmployee);
+                    unitOfWork.Complete(); //Save changes in database
                     return RedirectToAction(nameof(Index));
 
                 }

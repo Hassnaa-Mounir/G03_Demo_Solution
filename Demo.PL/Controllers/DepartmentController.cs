@@ -6,15 +6,18 @@ namespace Demo.PL.Controllers
 {
     public class DepartmentController : Controller
     {
-        private IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public DepartmentController(IDepartmentRepository departRepository)
+        // private IDepartmentRepository _departmentRepository;
+
+        public DepartmentController( IUnitOfWork unitOfWork)
         {
-            _departmentRepository = departRepository;
+           // _departmentRepository = departRepository;
+            this.unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
-            var departments = _departmentRepository.GetAll();
+            var departments = unitOfWork.DepartmentRepository.GetAll();
 
 
             ////1.ViewData
@@ -39,8 +42,8 @@ namespace Demo.PL.Controllers
         {
             if(ModelState.IsValid)
             {
-               int result= _departmentRepository.Add(department); // # of rows effected
-
+                unitOfWork.DepartmentRepository.Add(department); // # of rows effected
+               var result= unitOfWork.Complete();
 
                 if (result > 0) { TempData["Message"] = "Department Will Created"; }
                 return RedirectToAction(nameof(Index));
@@ -52,7 +55,7 @@ namespace Demo.PL.Controllers
         {
             if (id is null) return BadRequest();
 
-            var department = _departmentRepository.GetById(id.Value);
+            var department = unitOfWork.DepartmentRepository.GetById(id.Value);
             if (department is null) return NotFound();
 
             return View(ViewName ,department);
@@ -80,7 +83,8 @@ namespace Demo.PL.Controllers
             {
                 try 
                 {
-                    _departmentRepository.Update(department);
+                    unitOfWork.DepartmentRepository.Update(department);
+                    unitOfWork.Complete();
                     return RedirectToAction(nameof(Index));
                 } 
                 catch (System.Exception ex)
@@ -113,7 +117,8 @@ namespace Demo.PL.Controllers
             if (id != department.Id) return BadRequest();
             try
             {
-                _departmentRepository.Delete(department);
+                unitOfWork.DepartmentRepository.Delete(department);
+                unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
 
             }

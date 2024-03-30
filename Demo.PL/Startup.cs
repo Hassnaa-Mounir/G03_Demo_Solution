@@ -37,10 +37,12 @@ namespace Demo.PL
                 //Default Scopped
             }/*, ServiceLifetime.Scoped*//*,ServiceLifetime.Singleton*//*,ServiceLifetime.Transient*/); //allow dependency injection
 
-            services.AddScoped<IDepartmentRepository , DepartmentRepository>();
+            services.AddScoped<IDepartmentRepository , DepartmentRepository>(); // needed when injection object in view depend on this service
 
-            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+           // services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddAutoMapper(M=>M.AddProfile(new EmployeeProfile()));
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             //services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
 
             //services.AddTransient<IEmployeeRepository, EmployeeRepository>();
