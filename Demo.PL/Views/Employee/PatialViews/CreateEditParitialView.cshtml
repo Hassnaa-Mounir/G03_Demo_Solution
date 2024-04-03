@@ -1,7 +1,7 @@
 ﻿@model EmployeeViewModel
 @inject IUnitOfWork unitofWork
 @{
-    var departments = new SelectList(/* @ViewBag.Departs */unitofWork.Repository<Department>().GetAll(), "Id", "Name");
+    var departments = new SelectList(/* @ViewBag.Departs */await unitofWork.Repository<Department>().GetAllAsync(), "Id", "Name");
 }
 
 <div class="form-group">

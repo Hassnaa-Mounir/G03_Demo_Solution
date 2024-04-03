@@ -9,9 +9,9 @@ namespace Demo.BLL.Interfaces
 {
     public interface IGenericRepository <T>  where T : class 
     {
-        IEnumerable<T> GetAll();
+        Task<IEnumerable<T>> GetAllAsync();
 
-        T GetById(int id);
+        Task<T> GetAsync(int id);
 
         void Add(T item);
 

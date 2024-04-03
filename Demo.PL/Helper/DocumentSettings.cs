@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.IO;
 using System;
+using System.Threading.Tasks;
 
 namespace Demo.PL.Helper
 { 
     public static class DocumentSettings //Helper class using to make upload and delete to file
     {
 
-        public static string UploadFile(IFormFile file, string folderName)
+        public static async Task<string>  UploadFile(IFormFile file, string folderName)
         {
             // 1. Get Located Folder Path 
 
@@ -30,8 +31,7 @@ namespace Demo.PL.Helper
 
             using var fileStream = new FileStream(filePath, FileMode.Create);
 
-
-            file.CopyTo(fileStream);
+            await file.CopyToAsync(fileStream);
 
             return fileName;
 

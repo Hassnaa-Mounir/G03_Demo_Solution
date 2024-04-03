@@ -14,7 +14,7 @@ namespace Demo.BLL.Interfaces
 
         IGenericRepository<T> Repository<T>() where T :class;
 
-        int Complete();
+        Task<int> Complete();
 
        // void Dispose();
     }

@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace Demo.PL.Controllers
@@ -30,14 +31,14 @@ namespace Demo.PL.Controllers
             this.mapper = mapper;
         }
 
-        public IActionResult Index(string ValueName) 
+        public async Task<IActionResult> Index(string ValueName) 
         {
             var employees = Enumerable.Empty<Employee>();
             var employeeRepo = unitOfWork.Repository<Employee>() as EmployeeRepository;
 
             if (string.IsNullOrEmpty(ValueName)) 
             {
-                employees = employeeRepo.GetAll();
+                employees = await employeeRepo.GetAllAsync();
 
             }
 
@@ -76,7 +77,7 @@ namespace Demo.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(EmployeeViewModel VMemployee) 
+        public async Task<IActionResult> Create(EmployeeViewModel VMemployee) 
         {
             #region Mnual Mapping
             //Manual Mapping
@@ -99,8 +100,7 @@ namespace Demo.PL.Controllers
             if (ModelState.IsValid)
             {
                 //Auto Mapping
-                VMemployee.ImageName = DocumentSettings.UploadFile(VMemployee.Image, "Images");
-
+                VMemployee.ImageName = await DocumentSettings.UploadFile(VMemployee.Image, "Images");
                 var Mapperemp = mapper.Map<EmployeeViewModel, Employee>(VMemployee);
                 unitOfWork.Repository<Employee>().Add(Mapperemp);
 
@@ -112,7 +112,7 @@ namespace Demo.PL.Controllers
                 ///3.Delte
                 /// emp = unitOfWork.EmployeeRepository.Delete(Mapperemp);
 
-                unitOfWork.Complete();
+               await unitOfWork.Complete();
 
                 return RedirectToAction(nameof(Index));
             }
@@ -124,11 +124,11 @@ namespace Demo.PL.Controllers
 
         [HttpGet]
        // [ValidateAntiForgeryToken]
-        public IActionResult Details([FromRoute]int? id ,string ViewName = "Details")
+        public async Task<IActionResult> Details([FromRoute]int? id ,string ViewName = "Details")
         {
             if (id is null) return BadRequest();
 
-            var emp= unitOfWork.Repository<Employee>().GetById(id.Value);
+            var emp= await unitOfWork.Repository<Employee>().GetAsync(id.Value);
             var MappedEmp = mapper.Map<Employee, EmployeeViewModel>(emp);
 
             if (emp is null) return NotFound();
@@ -140,14 +140,14 @@ namespace Demo.PL.Controllers
 
         [HttpGet]
        // [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int? id) 
+        public async Task<IActionResult> Edit([FromRoute] int? id) 
         {
-            return Details(id,"Edit");
+            return await Details(id,"Edit");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(EmployeeViewModel VMemployee , [FromRoute] int id)
+        public async Task<IActionResult> Edit(EmployeeViewModel VMemployee , [FromRoute] int id)
         {
             if(id != VMemployee.Id) return BadRequest();
 
@@ -167,7 +167,7 @@ namespace Demo.PL.Controllers
                     }
                     var MappedEmp = mapper.Map<EmployeeViewModel, Employee>(VMemployee);
                     unitOfWork.Repository<Employee>().Update(MappedEmp);
-                    unitOfWork.Complete();
+                    await unitOfWork.Complete();
                     return RedirectToAction(nameof(Index));
                 }
                 catch (System.Exception ex)
@@ -183,14 +183,14 @@ namespace Demo.PL.Controllers
 
         [HttpGet]
        // [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromRoute] int? id) 
+        public async Task<IActionResult> Delete([FromRoute] int? id) 
         {
-            return Details(id, "Delete");
+            return await Details(id, "Delete");
         }
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public IActionResult Delete(EmployeeViewModel VMemployee , [FromRoute] int? id) 
+        public async Task<IActionResult> Delete(EmployeeViewModel VMemployee , [FromRoute] int? id) 
         {
             if (VMemployee.Id!= id) return BadRequest();
 
@@ -201,7 +201,7 @@ namespace Demo.PL.Controllers
                     VMemployee.ImageName = TempData["ImageName"] as string;
                     var MappedEmployee = mapper.Map<EmployeeViewModel, Employee>(VMemployee);
                     unitOfWork.Repository<Employee>().Delete(MappedEmployee);
-                  int count=  unitOfWork.Complete(); //Save changes in database
+                   int count= await unitOfWork.Complete(); //Save changes in database
                     if (count > 0)
                     {
                         if (VMemployee.ImageName != null)

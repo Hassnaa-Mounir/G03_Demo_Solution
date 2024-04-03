@@ -29,19 +29,17 @@ namespace Demo.BLL.Repository
 
       
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
             if (typeof(T) == typeof(Employee))
-            {
-              return (IEnumerable<T>)dbContext.Employees.Include(E=>E.department).ToList();
-            }
-          
-            return dbContext.Set<T>().ToList(); 
+              return (IEnumerable<T>) await dbContext.Employees.Include(e => e.department).AsNoTracking().ToListAsync();
+            else
+            return await dbContext.Set<T>().AsNoTracking().ToListAsync();
         }
 
-        public T GetById(int id)
-        => dbContext.Set<T>().Find(id);
-       
+        public async Task<T> GetAsync(int id)
+        => await dbContext.FindAsync<T>(id);
+
 
         public void Update(T item)
        =>   dbContext.Update(item);

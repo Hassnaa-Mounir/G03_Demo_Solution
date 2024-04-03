@@ -11,7 +11,7 @@ using Demo.DAL.Models;
 
 namespace Demo.BLL.Repository
 {
-    public class UnitOfWork : IUnitOfWork ,IDisposable
+    public class UnitOfWork : IUnitOfWork , IAsyncDisposable
     {
         private readonly MVCAPP_DbContext dbContext;
 
@@ -27,13 +27,18 @@ namespace Demo.BLL.Repository
         //public IEmployeeRepository EmployeeRepository { get; set ; }
         //public IDepartmentRepository DepartmentRepository { get ; set; }
 
-        public int Complete()
+        public async Task<int> Complete()
         {
-          return  dbContext.SaveChanges();
+            return await dbContext.SaveChangesAsync();
         }
 
-        public void Dispose()
-        =>dbContext.Dispose();
+        //public void Dispose()
+        //=>dbContext.Dispose();
+
+        public async ValueTask DisposeAsync()
+        {
+            await dbContext.DisposeAsync();
+        }
 
         public IGenericRepository<T> Repository<T>() where T : class
         {
