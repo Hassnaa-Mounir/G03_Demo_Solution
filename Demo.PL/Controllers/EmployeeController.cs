@@ -2,9 +2,11 @@
 using Demo.BLL.Interfaces;
 using Demo.BLL.Repository;
 using Demo.DAL.Models;
+using Demo.PL.Helper;
 using Demo.PL.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Emit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -97,6 +99,7 @@ namespace Demo.PL.Controllers
             if (ModelState.IsValid)
             {
                 //Auto Mapping
+                VMemployee.ImageName = DocumentSettings.UploadFile(VMemployee.Image, "Images");
 
                 var Mapperemp = mapper.Map<EmployeeViewModel, Employee>(VMemployee);
                 unitOfWork.Repository<Employee>().Add(Mapperemp);
@@ -129,6 +132,8 @@ namespace Demo.PL.Controllers
             var MappedEmp = mapper.Map<Employee, EmployeeViewModel>(emp);
 
             if (emp is null) return NotFound();
+            if (ViewName.Equals("Delete", StringComparison.OrdinalIgnoreCase) || ViewName.Equals("Edit", StringComparison.OrdinalIgnoreCase))
+                TempData["ImageName"] = emp.ImageName;
 
             return View(ViewName, MappedEmp);
         }
@@ -150,6 +155,16 @@ namespace Demo.PL.Controllers
             {
                 try
                 {
+                    if (VMemployee.Image == null)
+                    {
+                        if (TempData["ImageName"] != null)
+                            VMemployee.ImageName = TempData["ImageName"] as string;
+                    }
+                    else
+                    {
+                        DocumentSettings.DeleteFile(TempData["ImageName"] as string, "Images");
+                        VMemployee.ImageName = DocumentSettings.UploadFile(VMemployee.Image, "Images");
+                    }
                     var MappedEmp = mapper.Map<EmployeeViewModel, Employee>(VMemployee);
                     unitOfWork.Repository<Employee>().Update(MappedEmp);
                     unitOfWork.Complete();
@@ -183,11 +198,20 @@ namespace Demo.PL.Controllers
             {
                 try
                 {
+                    VMemployee.ImageName = TempData["ImageName"] as string;
                     var MappedEmployee = mapper.Map<EmployeeViewModel, Employee>(VMemployee);
                     unitOfWork.Repository<Employee>().Delete(MappedEmployee);
-                    unitOfWork.Complete(); //Save changes in database
-                    return RedirectToAction(nameof(Index));
-
+                  int count=  unitOfWork.Complete(); //Save changes in database
+                    if (count > 0)
+                    {
+                        if (VMemployee.ImageName != null)
+                        {
+                            DocumentSettings.DeleteFile(VMemployee.ImageName, "Images");
+                        }
+                        return RedirectToAction(nameof(Index));
+                       
+                    }
+                    return View(VMemployee);
                 }
 
                 catch (System.Exception ex)
