@@ -29,7 +29,7 @@ namespace Demo.DAL.Data
 
             modelBuilder.Entity<Employee>().HasOne(e=>e.department).WithMany(d=>d.Employees).HasForeignKey(d=>d.DeptId)/*.OnDelete(DeleteBehavior.Cascade)*/;
 
-
+            modelBuilder.Entity<Employee>().Property<bool>("IsActive");
 
 
         }

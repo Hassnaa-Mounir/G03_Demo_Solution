@@ -47,5 +47,8 @@ namespace Demo.DAL.Models
         [InverseProperty(nameof(Department.Employees))]
         public virtual Department department { get; set; } = null!;
 
+        
+        public string? ImageName { get; set; }
+
     }
 }
