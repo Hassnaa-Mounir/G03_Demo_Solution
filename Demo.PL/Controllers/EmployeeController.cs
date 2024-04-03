@@ -132,7 +132,7 @@ namespace Demo.PL.Controllers
             var MappedEmp = mapper.Map<Employee, EmployeeViewModel>(emp);
 
             if (emp is null) return NotFound();
-            if (ViewName.Equals("Delete", StringComparison.OrdinalIgnoreCase))
+            if (ViewName.Equals("Delete", StringComparison.OrdinalIgnoreCase) || ViewName.Equals("Edit", StringComparison.OrdinalIgnoreCase))
                 TempData["ImageName"] = emp.ImageName;
 
             return View(ViewName, MappedEmp);
@@ -155,6 +155,16 @@ namespace Demo.PL.Controllers
             {
                 try
                 {
+                    if (VMemployee.Image == null)
+                    {
+                        if (TempData["ImageName"] != null)
+                            VMemployee.ImageName = TempData["ImageName"] as string;
+                    }
+                    else
+                    {
+                        DocumentSettings.DeleteFile(TempData["ImageName"] as string, "Images");
+                        VMemployee.ImageName = DocumentSettings.UploadFile(VMemployee.Image, "Images");
+                    }
                     var MappedEmp = mapper.Map<EmployeeViewModel, Employee>(VMemployee);
                     unitOfWork.Repository<Employee>().Update(MappedEmp);
                     unitOfWork.Complete();
@@ -194,8 +204,12 @@ namespace Demo.PL.Controllers
                   int count=  unitOfWork.Complete(); //Save changes in database
                     if (count > 0)
                     {
-                        DocumentSettings.DeleteFile(VMemployee.ImageName, "Images");
+                        if (VMemployee.ImageName != null)
+                        {
+                            DocumentSettings.DeleteFile(VMemployee.ImageName, "Images");
+                        }
                         return RedirectToAction(nameof(Index));
+                       
                     }
                     return View(VMemployee);
                 }
