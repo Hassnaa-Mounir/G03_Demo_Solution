@@ -1,6 +1,7 @@
 ﻿using Demo.DAL.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace Demo.PL.ViewModels
 {
@@ -39,5 +40,8 @@ namespace Demo.PL.ViewModels
         //Navigational property [one]
         [InverseProperty(nameof(Department.Employees))]
         public virtual Department department { get; set; } = null!;
+
+        public IFormFile Image { get; set; }
+        public string ImageName { get; set; }
     }
 }
